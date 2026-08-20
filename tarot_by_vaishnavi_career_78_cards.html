@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarot by Vaishnavi | Pure Soul</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(135deg,#ff7200,#ff9d3d,#fff4e6,#fff);color:#662900;overflow-x:hidden}
+header{width:100%;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.18);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.4);position:sticky;top:0;z-index:100}
+.logo{color:#fff;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:bold;text-shadow:0 3px 8px rgba(100,40,0,.25)}
+.logo span{display:block;color:skyblue;font-size:.55em;letter-spacing:4px;margin-top:4px}
+.menu-button,.start-button{border:none;padding:12px 20px;border-radius:30px;background:#fff;color:#df5b00;font-weight:bold;cursor:pointer;box-shadow:0 5px 15px rgba(120,50,0,.2)}
+.hero{min-height:calc(100vh - 85px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px}
+.hero h1{color:#fff;font-size:clamp(2.3rem,8vw,5rem);text-shadow:0 4px 12px rgba(120,40,0,.25)}
+.hero h1 span{color:skyblue}
+.hero p{max-width:650px;margin:20px auto 30px;line-height:1.7;font-size:clamp(1rem,2.5vw,1.2rem);color:#783600}
+.start-button{padding:15px 30px;font-size:1rem;transition:.3s}
+.start-button:hover{transform:scale(1.05)}
+#careerSection{display:none;padding:70px 4% 100px;text-align:center}
+#careerSection.show{display:block;animation:appear .7s ease}
+@keyframes appear{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.section-title{color:#fff;font-size:clamp(2rem,6vw,3.5rem);text-shadow:0 3px 10px rgba(120,40,0,.2)}
+.section-subtitle{margin:12px 0 45px;color:#7d3500}
+.card-container{max-width:1250px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:25px;justify-items:center}
+.tarot-wrapper{width:125px;height:180px;perspective:1000px;cursor:pointer}
+.tarot-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.tarot-wrapper.flipped .tarot-card{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:14px;box-shadow:0 10px 25px rgba(140,55,0,.25);border:2px solid rgba(255,255,255,.7)}
+.card-front{background:linear-gradient(145deg,#fff,#fff0df)}
+.card-number{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#ff7800,#ffb45c);color:#fff;font-size:1.6rem;font-weight:bold;box-shadow:0 5px 12px rgba(180,70,0,.2)}
+.card-back{transform:rotateY(180deg);background:linear-gradient(145deg,#ff7200,#ffb347);color:#fff;text-align:center}
+.card-back .symbol{font-size:1.5rem;margin-bottom:7px}
+.card-back h3{font-size:.85rem;margin-bottom:8px}
+.card-back p{font-size:.67rem;line-height:1.4}
+footer{text-align:center;padding:25px;color:#853b00;font-size:.85rem}
+@media(max-width:600px){header{padding:15px 4%}.logo{font-size:1.35rem}.menu-button{padding:9px 12px;font-size:.72rem}.hero h1{font-size:2.5rem}.card-container{grid-template-columns:repeat(2,125px);justify-content:center;gap:20px}#careerSection{padding:50px 10px 70px}}
+@media(max-width:350px){.card-container{grid-template-columns:repeat(2,105px)}.tarot-wrapper{width:105px;height:160px}.card-number{width:58px;height:58px;font-size:1.4rem}.card-back p{font-size:.59rem}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Tarot by Vaishnavi<span>PURE SOUL</span></div>
+<button class="menu-button" onclick="openCareerTarot()">Career Tarot Card</button>
+</header>
+
+<section class="hero" id="home">
+<h1>Tarot by Vaishnavi <span>Pure Soul</span></h1>
+<p>Take a moment, clear your mind and trust your intuition. Choose a card and discover the career message waiting for you.</p>
+<button class="start-button" onclick="openCareerTarot()">✨ Choose Your Career Card</button>
+</section>
+
+<section id="careerSection">
+<h2 class="section-title">Career Tarot</h2>
+<p class="section-subtitle">Trust your intuition. Choose one card.</p>
+<div class="card-container" id="cardContainer"></div>
+</section>
+
+<footer>Tarot by Vaishnavi • Pure Soul ✨</footer>
+
+<script>
+const tarotCards=[['The Fool','🌱','A completely new career journey may be beginning. Take the first step with an open mind. You do not need to know the entire path before you begin.'],
+['The Magician','✨','You already have more skills and abilities than you realize. Use your knowledge, creativity and confidence to create the career opportunity you want.'],
+['The High Priestess','🌙','Trust your intuition regarding your career. Something may not be obvious yet. Observe carefully and allow the right information to reveal itself before making a decision.'],
+['The Empress','🌸','Your creativity can become an important professional strength. A nurturing environment, creative project or opportunity for growth may bring satisfaction and abundance.'],
+['The Emperor','👑','Career stability and leadership are highlighted. Take responsibility, organize your plans and believe that you are capable of building something strong and lasting.'],
+['The Hierophant','📖','Learning from an experienced person, mentor, teacher or established organization may benefit your career. Traditional education or structured training can open doors.'],
+['The Lovers','💫','A meaningful career choice may require you to decide what truly aligns with your values. Choose the path that feels right for you rather than simply following others.'],
+['The Chariot','🏆','Success comes through determination and focused action. Keep moving toward your goal even when obstacles appear. Your discipline can help you overcome competition.'],
+['Strength','🦁','Your inner strength is greater than your current challenges. Handle difficult career situations calmly and confidently. Patience and courage will work in your favor.'],
+['The Hermit','🕯️','Take some time to understand what you genuinely want from your career. Solitude, reflection or learning may help you discover a direction that feels more meaningful.'],
+['Wheel of Fortune','🎡','A change in your professional circumstances may be approaching. An unexpected opportunity or shift could move your career in a completely new direction.'],
+['Justice','⚖️','Fairness and accountability are important now. Your professional efforts can receive the results they deserve. Make decisions carefully and keep everything honest and balanced.'],
+['The Hanged Man','🌿','Progress may temporarily feel paused. Instead of forcing things, look at your career situation from a different perspective. A new viewpoint may reveal your next step.'],
+['Death','🦋','An old career chapter is ending so something new can begin. Let go of outdated plans, habits or situations that no longer support the person you are becoming.'],
+['Temperance','🌈','Balance and patience will help your career grow. Combine your different skills and experiences instead of thinking you must choose only one strength.'],
+['The Devil','🔥','Be careful of fear, unhealthy work situations or limiting beliefs about money and success. You have more freedom than you may currently believe.'],
+['The Tower','⚡','An unexpected career change may shake your existing plans. Although it may initially feel uncomfortable, this disruption can clear the way for something more suitable.'],
+['The Star','⭐','Hope and renewed confidence surround your career path. Keep believing in your abilities. A goal that once seemed distant may gradually become possible.'],
+['The Moon','🌙','Career uncertainty may be creating confusion. Do not make an important decision based only on fear. Gather facts, trust your intuition and give yourself time.'],
+['The Sun','☀️','A bright career phase is possible. Success, confidence and recognition are strongly highlighted. Your hard work can lead to a result that makes you genuinely proud.'],
+['Judgement','🔔','A career decision or turning point may be approaching. Reflect on your past experiences and use what you have learned to confidently answer your next professional calling.'],
+['The World','🌍','A major professional cycle is reaching completion. Your experience has prepared you for the next level. Expansion, achievement or a completely new chapter may follow.'],
+['Ace of Wands','🔥','A powerful new career idea or opportunity is appearing. Act on your inspiration while your motivation is strong.'],
+['Two of Wands','🗺️','You are thinking about your future career direction. Make a clear plan and consider opportunities beyond your current comfort zone.'],
+['Three of Wands','🌅','Your career plans are beginning to move forward. Opportunities may come through distant places, online work or connections outside your usual circle.'],
+['Four of Wands','🎉','A positive professional milestone may be approaching. You may experience stability, celebration, a successful project or a supportive workplace.'],
+['Five of Wands','⚔️','Competition may be present in your career. Instead of comparing yourself with everyone else, focus on improving your own skills and showing your unique strengths.'],
+['Six of Wands','🏅','Recognition is possible after your efforts. Your work may receive praise, attention or approval from people who can influence your career.'],
+['Seven of Wands','🛡️','Stand firmly behind your abilities. You may need to defend your ideas, position or career goals, but you are capable of handling the pressure.'],
+['Eight of Wands','💨','Career developments may happen quickly. Expect messages, interviews, calls, opportunities or sudden movement after a period of waiting.'],
+['Nine of Wands','🔥','You may feel tired after repeated challenges, but you are closer to the finish line than you think. Protect your energy and keep going.'],
+['Ten of Wands','🎒','You may be carrying too many responsibilities. Learn to prioritize and delegate where possible. Success should not require you to carry everything alone.'],
+['Page of Wands','📩','A new professional interest, message or opportunity can spark your curiosity. Explore it without demanding that you have everything figured out immediately.'],
+['Knight of Wands','🐎','Your career may move with exciting speed. Take bold action, but avoid making impulsive decisions without considering the long-term consequences.'],
+['Queen of Wands','👑','Confidence and charisma are your professional advantages. Let your personality and creativity be visible. You have the ability to inspire others.'],
+['King of Wands','🔥','Leadership and ambition are strongly highlighted. Think bigger about your career and take initiative instead of waiting for someone else to create your opportunity.'],
+['Ace of Cups','💧','A career opportunity may bring emotional satisfaction and renewed motivation. Look for work that gives you a sense of purpose as well as financial value.'],
+['Two of Cups','🤝','A valuable professional partnership may develop. Cooperation, networking or finding the right colleague can help your career progress.'],
+['Three of Cups','🥂','Your professional network can become an important source of opportunities. Celebrate your progress and stay connected with supportive people.'],
+['Four of Cups','🌧️','You may feel bored, disappointed or uninterested in current career options. Before rejecting an opportunity, make sure you have not overlooked something valuable.'],
+['Five of Cups','💙','A career disappointment may still be affecting your confidence. Allow yourself to learn from it, but remember that not every closed door represents the end.'],
+['Six of Cups','🌷','Something from your past may influence your career future. A previous contact, old skill or earlier opportunity could return in an unexpected way.'],
+['Seven of Cups','☁️','You may have many career possibilities but feel confused about which one to choose. Narrow your options and focus on what is realistic and meaningful.'],
+['Eight of Cups','🚶','You may realize that an existing career situation no longer fulfills you. Walking away can be difficult, but sometimes leaving creates space for a better direction.'],
+['Nine of Cups','😊','A career wish may be closer than you think. Continue believing in your goal while taking practical steps toward achieving it.'],
+['Ten of Cups','🌈','Your ideal career can include both professional success and personal happiness. Seek an environment where your work and personal values can coexist peacefully.'],
+['Page of Cups','💌',"A surprising career message or creative opportunity may appear. Stay curious and don't dismiss an option simply because it looks different from your original plan."],
+['Knight of Cups','🌹','Follow the career path that genuinely inspires you. An opportunity connected with creativity, communication or meaningful work may attract your attention.'],
+['Queen of Cups','🌊','Emotional intelligence is one of your strengths. Careers involving people, communication, support, creativity or understanding others may suit your natural abilities.'],
+['King of Cups','👑','Professional maturity and emotional balance will help you succeed. Lead with compassion while maintaining clear boundaries and strong decision-making.'],
+['Ace of Swords','⚔️','Clarity is arriving. A clear idea, decision, interview or conversation may help you understand exactly what direction your career should take.'],
+['Two of Swords','⚖️','You may be stuck between two career choices. Gather more information instead of rushing. Once you understand the facts, the decision can become easier.'],
+['Three of Swords','💔','A professional rejection or disappointment may hurt your confidence. Remember that one setback does not define your abilities or your future.'],
+['Four of Swords','🕊️','Your career needs a moment of rest and recovery. Step back, refresh your mind and return with a clearer strategy instead of exhausting yourself.'],
+['Five of Swords','⚔️','Be careful with workplace conflict or unnecessary competition. Not every argument needs to be won. Protect your reputation and choose your battles wisely.'],
+['Six of Swords','⛵','You are gradually moving away from a difficult professional period. A change of workplace, environment or career strategy may bring greater peace.'],
+['Seven of Swords','🦊','Use strategy in your career decisions. Protect your plans and be selective about whom you trust professionally. Smart planning can prevent unnecessary problems.'],
+['Eight of Swords','🔒','You may feel trapped by your current career circumstances, but some of those limitations may be created by fear. Look for practical ways to regain your freedom.'],
+['Nine of Swords','🌙','Career worries may be occupying too much of your mind. Do not assume the worst before you have facts. Break your concerns into smaller problems you can solve.'],
+['Ten of Swords','🌅','A difficult professional chapter is reaching its end. Although the experience may have been painful, it can become the starting point for a much stronger direction.'],
+['Page of Swords','📝','Learning, research and communication can open a career door. Stay curious, improve your knowledge and pay attention to new information.'],
+['Knight of Swords','⚡','Take decisive action toward your goal. Your determination can create rapid progress, but remember to think before reacting to professional situations.'],
+['Queen of Swords','🦋','Use logic and clear communication in your career. Know your worth, set boundaries and make professional decisions based on facts rather than pressure.'],
+['King of Swords','⚖️','Your ability to think logically and make fair decisions can lead to professional authority. Strong communication and knowledge can become your greatest career assets.'],
+['Ace of Pentacles','💰','A tangible career opportunity may be approaching. This could involve employment, income, a new project or a practical chance to build financial stability.'],
+['Two of Pentacles','⚖️','You may need to balance multiple career responsibilities or opportunities. Organize your time carefully and avoid taking on more than you can manage.'],
+['Three of Pentacles','🏗️','Your skills can grow through teamwork and collaboration. Working with experienced people may help you improve your abilities and build a stronger professional reputation.'],
+['Four of Pentacles','💎',"You may strongly desire career and financial security. Stability is valuable, but don't allow fear of change to prevent you from pursuing a better opportunity."],
+['Five of Pentacles','🌧️','A period of financial or career difficulty may be testing your confidence. Remember that temporary struggle does not determine your long-term future.'],
+['Six of Pentacles','🤲','Support may come through a helpful person, mentor, employer or professional connection. Be willing to both receive assistance and support others when you can.'],
+['Seven of Pentacles','🌱','Your career growth requires patience. The effort you are putting in may not show immediate results, but consistent work can produce meaningful rewards over time.'],
+['Eight of Pentacles','🔨','Skill development is your key to progress. Practice, training and consistent improvement can significantly strengthen your chances of achieving your career goal.'],
+['Nine of Pentacles','🌿','Independence and financial confidence are possible. Your own skills and dedication can eventually create a professional life where you feel secure and capable.'],
+['Ten of Pentacles','🏡','Long-term career and financial stability are highlighted. Build patiently and make choices that support not only immediate income but also your future security.'],
+['Page of Pentacles','📚','A learning opportunity may become the beginning of a valuable career path. Invest in practical skills and stay open to starting small.'],
+['Knight of Pentacles','🐢','Slow and steady progress is your strength. Keep following your plan consistently. Your reliability and discipline can eventually create strong professional results.'],
+['Queen of Pentacles','🌿','You have the ability to create both career stability and financial security. Practical thinking, patience and good organization can help you build a comfortable professional life.'],
+['King of Pentacles','👑','Strong financial and professional achievement is possible through discipline and smart decisions. Your career can grow into a position of stability, authority and abundance.']];
+
+const container=document.getElementById("cardContainer");
+
+tarotCards.forEach((card,index)=>{
+  const wrapper=document.createElement("div");
+  wrapper.className="tarot-wrapper";
+  wrapper.innerHTML=`
+    <div class="tarot-card">
+      <div class="card-face card-front">
+        <div class="card-number">${index+1}</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="symbol">${card[1]}</div>
+        <h3>${card[0]}</h3>
+        <p>${card[2]}</p>
+      </div>
+    </div>`;
+  wrapper.addEventListener("click",()=>wrapper.classList.toggle("flipped"));
+  container.appendChild(wrapper);
+});
+
+function openCareerTarot(){
+  const section=document.getElementById("careerSection");
+  section.classList.add("show");
+  setTimeout(()=>section.scrollIntoView({behavior:"smooth"}),100);
+}
+</script>
+</body>
+</html>
