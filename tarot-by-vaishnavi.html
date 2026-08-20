@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ff1493" />
+  <title>Tarot by Vaishnavi | Pure Soul</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --pink: #ff1493;
+      --deep-pink: #c40073;
+      --purple: #5f146f;
+      --yellow: #fff04a;
+      --cream: #fff8fb;
+      --gold: #ffd34d;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--purple);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255,255,255,.45), transparent 28%),
+        linear-gradient(120deg, #ff00a8 0%, #ff4da6 35%, #ffcf55 72%, #fff51f 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    /* HEADER */
+    header {
+      min-height: 145px;
+      padding: 22px clamp(16px, 5vw, 70px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 2px solid rgba(117, 0, 87, .55);
+      background: rgba(255,255,255,.16);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      text-align: center;
+      flex: 1;
+    }
+
+    .brand h1 {
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 1;
+      font-style: italic;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 2px 2px 0 rgba(105, 0, 95, .35);
+    }
+
+    .brand p {
+      margin-top: 9px;
+      font-size: clamp(1.25rem, 3vw, 2.3rem);
+      font-style: italic;
+      font-weight: 700;
+      color: #66d9ff;
+      text-shadow: 1px 1px 0 rgba(0, 80, 120, .2);
+    }
+
+    .tarot-logo {
+      width: 90px;
+      min-width: 90px;
+      height: 105px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .mini-card {
+      position: absolute;
+      width: 48px;
+      height: 75px;
+      border: 2px solid #ffd84d;
+      border-radius: 9px;
+      background: linear-gradient(145deg, #65126f, #e9008c);
+      color: #ffe85b;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      box-shadow: 0 5px 15px rgba(98,0,90,.25);
+    }
+
+    .mini-card:nth-child(1) { transform: rotate(-25deg) translate(-18px, 4px); }
+    .mini-card:nth-child(2) { transform: rotate(0deg) translateY(-5px); z-index: 2; }
+    .mini-card:nth-child(3) { transform: rotate(25deg) translate(18px, 4px); }
+
+    .menu-wrap {
+      position: relative;
+    }
+
+    .menu-button {
+      border: 2px solid rgba(255,255,255,.8);
+      color: white;
+      background: linear-gradient(135deg, #ff0099, #c30078);
+      padding: 15px 23px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: clamp(.95rem, 2vw, 1.25rem);
+      box-shadow: 0 7px 18px rgba(138,0,91,.28);
+      transition: transform .2s ease, box-shadow .2s ease;
+      white-space: nowrap;
+    }
+
+    .menu-button:hover,
+    .menu-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(138,0,91,.38);
+      outline: none;
+    }
+
+    .menu-panel {
+      display: none;
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 9px);
+      right: 0;
+      min-width: 210px;
+      padding: 10px;
+      background: rgba(255,255,255,.96);
+      border: 2px solid #ff4caf;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(100,0,80,.2);
+    }
+
+    .menu-panel.open {
+      display: block;
+    }
+
+    .menu-option {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #7b126c;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .menu-option:hover {
+      background: #ffe1f2;
+    }
+
+    /* MAIN */
+    main {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+      padding: 55px 0 80px;
+    }
+
+    .section-title {
+      text-align: center;
+      background: rgba(255,235,248,.75);
+      border: 3px solid rgba(255,255,255,.9);
+      border-radius: 999px;
+      padding: 12px 25px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto 16px;
+      font-size: clamp(1.6rem, 4vw, 2.9rem);
+      color: #68105f;
+      box-shadow: 0 4px 18px rgba(125,0,90,.12);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: clamp(1.05rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(48px, 78px));
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 45px;
+    }
+
+    .number-btn {
+      aspect-ratio: 1;
+      border: 3px solid #ffb12b;
+      border-radius: 22px;
+      background: rgba(255,242,251,.9);
+      color: #74106b;
+      font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 12px rgba(118,0,93,.16);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .number-btn:hover,
+    .number-btn:focus-visible {
+      transform: translateY(-4px) scale(1.04);
+      background: #fff;
+      outline: none;
+    }
+
+    .number-btn.selected {
+      background: linear-gradient(135deg, #ff2a9d, #e90083);
+      color: white;
+      border-color: #fff3a0;
+      box-shadow: 0 0 0 4px rgba(255,255,255,.45), 0 8px 22px rgba(194,0,112,.35);
+      transform: translateY(-3px);
+    }
+
+    /* TAROT CARD */
+    .reading-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: clamp(.95rem, 2.5vw, 1.25rem);
+      font-weight: 700;
+      min-height: 28px;
+    }
+
+    .card-scene {
+      width: min(330px, 82vw);
+      height: min(475px, 118vw);
+      max-height: 475px;
+      perspective: 1200px;
+      cursor: pointer;
+    }
+
+    .tarot-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform .8s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .tarot-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 5px solid #ffce46;
+      box-shadow:
+        0 15px 35px rgba(104,0,87,.28),
+        inset 0 0 0 3px #ff68bd;
+    }
+
+    .card-back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffd83e;
+      background:
+        radial-gradient(circle, transparent 15%, rgba(255,255,255,.06) 16%, transparent 17%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 3px, transparent 3px 13px),
+        linear-gradient(145deg, #4b0b69, #e9008d);
+    }
+
+    .card-back::before {
+      content: "✦";
+      position: absolute;
+      font-size: 9rem;
+      opacity: .2;
+    }
+
+    .back-inner {
+      width: 80%;
+      height: 88%;
+      border: 3px solid #ffd83e;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(2.5rem, 10vw, 4.5rem);
+      z-index: 1;
+    }
+
+    .back-inner span {
+      display: block;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255,255,255,.9), transparent 30%),
+        linear-gradient(145deg, #fff9fc, #ffe7f4);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .card-decoration {
+      font-size: 2rem;
+      color: #ff3ca7;
+    }
+
+    .card-number {
+      font-size: 1.1rem;
+      color: #a00076;
+      font-weight: 700;
+    }
+
+    .card-title {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      color: #761065;
+      font-style: italic;
+    }
+
+    .card-message {
+      font-size: clamp(1.05rem, 3.4vw, 1.3rem);
+      line-height: 1.65;
+      font-weight: 700;
+      color: #7a216e;
+    }
+
+    .card-footer {
+      color: #e9008c;
+      font-size: 1.7rem;
+    }
+
+    .flip-again {
+      border: 2px solid white;
+      background: linear-gradient(135deg, #ff1598, #d5007d);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(151,0,100,.25);
+      transition: transform .2s ease;
+    }
+
+    .flip-again:hover {
+      transform: translateY(-2px);
+    }
+
+    .note {
+      text-align: center;
+      max-width: 650px;
+      margin: 45px auto 0;
+      padding: 16px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.24);
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 22px;
+      background: rgba(255,255,255,.15);
+      color: #68115f;
+      font-weight: 700;
+    }
+
+    /* TABLET */
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .brand {
+        order: 1;
+        flex-basis: 70%;
+      }
+
+      .tarot-logo {
+        order: 2;
+      }
+
+      .menu-wrap {
+        order: 3;
+      }
+
+      .numbers {
+        grid-template-columns: repeat(6, 62px);
+      }
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      header {
+        min-height: auto;
+        padding: 16px 12px 20px;
+        gap: 12px;
+      }
+
+      .tarot-logo {
+        width: 65px;
+        min-width: 65px;
+        height: 78px;
+        transform: scale(.75);
+        margin-right: -12px;
+      }
+
+      .brand {
+        flex-basis: calc(100% - 55px);
+      }
+
+      .brand h1 {
+        font-size: clamp(1.7rem, 8vw, 2.5rem);
+      }
+
+      .brand p {
+        font-size: 1.25rem;
+      }
+
+      .menu-button {
+        width: 100%;
+        padding: 12px 17px;
+      }
+
+      .menu-wrap {
+        width: min(100%, 300px);
+      }
+
+      .menu-panel {
+        left: 0;
+        right: 0;
+      }
+
+      main {
+        width: 94%;
+        padding-top: 35px;
+      }
+
+      .section-title {
+        border-radius: 22px;
+        width: 100%;
+      }
+
+      .numbers {
+        grid-template-columns: repeat(5, minmax(46px, 60px));
+        gap: 9px;
+        margin-bottom: 35px;
+      }
+
+      .number-btn {
+        border-radius: 17px;
+        border-width: 2px;
+      }
+
+      .card-scene {
+        width: min(285px, 78vw);
+        height: min(420px, 115vw);
+      }
+
+      .card-front {
+        padding: 18px;
+      }
+
+      .note {
+        margin-top: 35px;
+        font-size: .82rem;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .numbers {
+        grid-template-columns: repeat(4, 58px);
+      }
+
+      .card-scene {
+        width: 265px;
+        height: 395px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="tarot-logo" aria-hidden="true">
+      <div class="mini-card">☾</div>
+      <div class="mini-card">✦</div>
+      <div class="mini-card">♡</div>
+    </div>
+
+    <div class="brand">
+      <h1>Tarot by Vaishnavi</h1>
+      <p>♡ Pure Soul ♡</p>
+    </div>
+
+    <div class="menu-wrap">
+      <button
+        class="menu-button"
+        id="menuButton"
+        aria-expanded="false"
+        aria-controls="menuPanel"
+      >
+        ♡ Love Tarot Card <span>⌄</span>
+      </button>
+
+      <div class="menu-panel" id="menuPanel">
+        <button class="menu-option" id="loveOption">♡ Love Tarot Card</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="loveTarot">
+    <h2 class="section-title">♡ Love Tarot Card ♡</h2>
+    <p class="subtitle">Choose a number and reveal your love message ✦</p>
+
+    <div class="numbers" id="numbers" aria-label="Choose a tarot card number"></div>
+
+    <section class="reading-area" aria-live="polite">
+      <p class="hint" id="hint">Choose a number above to reveal your card.</p>
+
+      <div
+        class="card-scene"
+        id="cardScene"
+        role="button"
+        tabindex="0"
+        aria-label="Tarot card. Select a number first."
+      >
+        <div class="tarot-card" id="tarotCard">
+          <div class="card-face card-back">
+            <div class="back-inner">
+              <div>
+                ♡
+                <span>Your Love Message</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-face card-front">
+            <div class="card-decoration">✦ ♡ ✦</div>
+            <div class="card-number" id="cardNumber">Card 1</div>
+            <h3 class="card-title" id="cardTitle">Your Love Message</h3>
+            <p class="card-message" id="cardMessage">
+              Choose a number to receive your love tarot message.
+            </p>
+            <div class="card-footer">♡ ✦ ♡</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="flip-again" id="flipAgain">↻ Flip Again ♡</button>
+    </section>
+
+    <p class="note">
+      ✦ Tarot is intended for reflection and entertainment. Your choices,
+      communication and actions shape your relationships. ✦
+    </p>
+  </main>
+
+  <footer>
+    Tarot by Vaishnavi • Pure Soul ♡
+  </footer>
+
+  <script>
+    const loveCards = [
+      { title: "The Fool", message: "A fresh romantic chapter is opening. Take a gentle leap of faith, but allow love to unfold naturally." },
+      { title: "The Magician", message: "You have the power to create the relationship you desire. Clear communication and confident action bring love closer." },
+      { title: "The High Priestess", message: "Not everything has been revealed yet. Trust your intuition and give hidden feelings time to come to light." },
+      { title: "The Empress", message: "Love is growing around you. You are worthy of affection, tenderness and a relationship that feels abundant and nurturing." },
+      { title: "The Emperor", message: "Someone may want stability and commitment. Healthy boundaries can turn strong feelings into something dependable." },
+      { title: "The Hierophant", message: "A relationship may be moving toward greater commitment. Shared values and honest intentions matter now." },
+      { title: "The Lovers", message: "A powerful connection is highlighted. Mutual attraction may be present, along with an important choice about love." },
+      { title: "The Chariot", message: "Love is moving forward when both people know where they are going. Determination can overcome distance or obstacles." },
+      { title: "Strength", message: "There is strong attraction here, but patience is your strength. Gentle love can be more powerful than force." },
+      { title: "The Hermit", message: "A little distance may be needed for clarity. Time alone can help you understand what your heart truly wants." },
+      { title: "Wheel of Fortune", message: "A turning point is approaching in your love life. Unexpected changes may open a new romantic path." },
+      { title: "Justice", message: "Truth and honesty are essential. A balanced relationship gives both people equal respect, effort and emotional space." },
+      { title: "The Hanged Man", message: "Love may be asking you to pause. Seeing the situation from another perspective can reveal what you could not see before." },
+      { title: "Death", message: "An old romantic chapter is transforming. Letting go of what no longer serves you creates space for something new." },
+      { title: "Temperance", message: "Love grows through patience, compromise and emotional balance. Do not rush what is meant to develop naturally." },
+      { title: "The Devil", message: "The chemistry may be intense, but look closely at attachment and boundaries. Choose passion that feels healthy, not controlling." },
+      { title: "The Tower", message: "A sudden truth or change may shake the relationship. What survives the truth can become more authentic." },
+      { title: "The Star", message: "Hope returns to your heart. Healing is taking place, and a more peaceful romantic future is possible." },
+      { title: "The Moon", message: "Feelings may be hidden or unclear. Avoid assumptions and wait for facts before deciding what someone truly feels." },
+      { title: "The Sun", message: "Joy, warmth and openness surround your love life. Honest affection can bring a beautiful period of happiness." },
+      { title: "Judgement", message: "A second chance or important realization may appear. Look at the past honestly before deciding what comes next." },
+      { title: "The World", message: "A romantic cycle is reaching completion. This can mark a lasting milestone or the peaceful beginning of a new chapter." },
+
+      { title: "Ace of Cups", message: "A beautiful emotional beginning is possible. Your heart is ready to receive genuine affection and deeper connection." },
+      { title: "Two of Cups", message: "Mutual feelings and emotional harmony are highlighted. This is one of the strongest cards for a balanced romantic connection." },
+      { title: "Three of Cups", message: "Love brings celebration and happy moments. Friendship and shared joy can strengthen a romantic bond." },
+      { title: "Four of Cups", message: "You may be overlooking an emotional opportunity. Open your heart, but make sure the connection truly fulfills you." },
+      { title: "Five of Cups", message: "Past disappointment still hurts, but not everything is lost. Healing can help you notice the love that remains available." },
+      { title: "Six of Cups", message: "Someone from the past or a familiar emotional connection may return to your thoughts or life." },
+      { title: "Seven of Cups", message: "Many romantic possibilities or fantasies may be surrounding you. Choose based on reality, not only imagination." },
+      { title: "Eight of Cups", message: "Your heart may be ready to leave an unfulfilling situation. Walking away can be an act of self-respect." },
+      { title: "Nine of Cups", message: "A romantic wish may be moving closer to fulfillment. Appreciate what is already good while keeping your expectations realistic." },
+      { title: "Ten of Cups", message: "Emotional fulfillment, harmony and lasting happiness are strongly highlighted. Love can feel like home." },
+      { title: "Page of Cups", message: "A sweet romantic message, crush or emotional surprise may appear. Stay open to sincere but gentle beginnings." },
+      { title: "Knight of Cups", message: "Romance is approaching. Someone may express feelings, make an invitation or show genuine romantic interest." },
+      { title: "Queen of Cups", message: "Deep emotional understanding surrounds this connection. Listen to your heart while keeping healthy emotional boundaries." },
+      { title: "King of Cups", message: "Someone may have deep feelings but express them calmly. Mature love values emotional stability over drama." },
+
+      { title: "Ace of Wands", message: "A spark is igniting. Attraction and chemistry are strong, making this an exciting time for romantic beginnings." },
+      { title: "Two of Wands", message: "Someone is considering the future of the relationship. Plans and choices about where love is going may soon become clearer." },
+      { title: "Three of Wands", message: "The relationship has room to grow. Patience and a positive view of the future can bring progress." },
+      { title: "Four of Wands", message: "Celebration and commitment are highlighted. This can point toward a relationship milestone or a joyful shared moment." },
+      { title: "Five of Wands", message: "Small conflicts or jealousy may create tension. Listen instead of competing, and avoid turning differences into battles." },
+      { title: "Six of Wands", message: "You are being noticed and appreciated. Confidence can attract positive romantic attention." },
+      { title: "Seven of Wands", message: "Protect what matters, but do not fight every battle. A worthwhile relationship needs both courage and cooperation." },
+      { title: "Eight of Wands", message: "Fast-moving communication is coming. Messages, calls or a sudden romantic development may arrive soon." },
+      { title: "Nine of Wands", message: "Your heart may be guarded because of past experiences. Keep your boundaries while allowing trustworthy love to prove itself." },
+      { title: "Ten of Wands", message: "You may be carrying too much emotional responsibility. Love should not feel like something only one person has to carry." },
+      { title: "Page of Wands", message: "Flirting and playful attraction are highlighted. Enjoy the spark while seeing whether the interest becomes consistent." },
+      { title: "Knight of Wands", message: "Passion is strong and someone may pursue you intensely. Enjoy the chemistry, but look for consistency too." },
+      { title: "Queen of Wands", message: "Your confidence is magnetic. Know your worth and let your natural warmth attract the right kind of attention." },
+      { title: "King of Wands", message: "A confident and passionate person may be strongly interested. Serious intentions become clearer through actions." },
+
+      { title: "Ace of Swords", message: "A truthful conversation can change everything. Clarity in love comes when both people say what they genuinely mean." },
+      { title: "Two of Swords", message: "Someone may be undecided or emotionally guarded. Do not force an answer before the heart is ready." },
+      { title: "Three of Swords", message: "Heartbreak or a difficult truth may be present. Healing begins when feelings are acknowledged rather than hidden." },
+      { title: "Four of Swords", message: "A pause can help the relationship breathe. Rest and reflection may be more useful than pushing for immediate answers." },
+      { title: "Five of Swords", message: "Winning an argument is not the same as protecting love. Choose understanding over ego when possible." },
+      { title: "Six of Swords", message: "You are moving away from emotional turbulence. A calmer chapter can begin once you stop carrying old conflict." },
+      { title: "Seven of Swords", message: "Something may be hidden or unspoken. Seek clarity gently and pay attention to whether actions match words." },
+      { title: "Eight of Swords", message: "Fear may be making the situation feel more trapped than it really is. You have more choices than you think." },
+      { title: "Nine of Swords", message: "Overthinking may be magnifying your fears. Do not let imagined outcomes replace honest communication." },
+      { title: "Ten of Swords", message: "A painful chapter may be ending. The ending can also become the first step toward emotional recovery." },
+      { title: "Page of Swords", message: "Curiosity and watching from a distance are highlighted. Someone may be interested but hesitant to speak openly." },
+      { title: "Knight of Swords", message: "Sudden communication or a direct approach may happen. Think before reacting to emotionally charged words." },
+      { title: "Queen of Swords", message: "Know your boundaries and speak clearly. Healthy independence makes room for healthier love." },
+      { title: "King of Swords", message: "A thoughtful person may care deeply but express love through logic and actions. Honest communication is essential." },
+
+      { title: "Ace of Pentacles", message: "A new romantic opportunity has long-term potential. Slow, steady effort can turn a beginning into something secure." },
+      { title: "Two of Pentacles", message: "Love needs balance with everyday responsibilities. Make sure the relationship receives consistent attention." },
+      { title: "Three of Pentacles", message: "A relationship grows when both people cooperate. Building together is more important than perfection." },
+      { title: "Four of Pentacles", message: "You may be holding tightly to someone or protecting your heart. Security is good, but love also needs room to breathe." },
+      { title: "Five of Pentacles", message: "Loneliness or feeling left out may be affecting your heart. Support and honest connection can help you through it." },
+      { title: "Six of Pentacles", message: "Healthy love gives and receives. Look for equal effort, generosity and respect from both sides." },
+      { title: "Seven of Pentacles", message: "Patience is important. A connection can grow beautifully when you give it time instead of demanding instant results." },
+      { title: "Eight of Pentacles", message: "Love requires consistent effort. Small acts of care can build something surprisingly strong over time." },
+      { title: "Nine of Pentacles", message: "Your independence is attractive. You do not need a relationship to prove your worth." },
+      { title: "Ten of Pentacles", message: "Long-term stability and family energy surround this connection. Commitment can become something lasting." },
+      { title: "Page of Pentacles", message: "A sincere but slow romantic opportunity may be developing. Look for steady actions rather than dramatic promises." },
+      { title: "Knight of Pentacles", message: "Someone dependable may be moving slowly toward commitment. This love values consistency over excitement." },
+      { title: "Queen of Pentacles", message: "Warmth, care and emotional security are highlighted. A nurturing relationship can grow through practical support." },
+      { title: "King of Pentacles", message: "Serious commitment and stability are highlighted. Someone may be ready to build a dependable future." }
+    ];
+
+    const numbers = document.getElementById("numbers");
+    const tarotCard = document.getElementById("tarotCard");
+    const cardScene = document.getElementById("cardScene");
+    const hint = document.getElementById("hint");
+    const cardNumber = document.getElementById("cardNumber");
+    const cardTitle = document.getElementById("cardTitle");
+    const cardMessage = document.getElementById("cardMessage");
+    const flipAgain = document.getElementById("flipAgain");
+
+    let selectedNumber = null;
+
+    // Create buttons 1-78.
+    loveCards.forEach((card, index) => {
+      const button = document.createElement("button");
+      button.className = "number-btn";
+      button.type = "button";
+      button.textContent = index + 1;
+      button.setAttribute("aria-label", `Choose tarot card ${index + 1}`);
+      button.addEventListener("click", () => selectCard(index));
+      numbers.appendChild(button);
+    });
+
+    function selectCard(index) {
+      selectedNumber = index;
+
+      document.querySelectorAll(".number-btn").forEach((button, i) => {
+        button.classList.toggle("selected", i === index);
+      });
+
+      const card = loveCards[index];
+
+      cardNumber.textContent = `Card ${index + 1} • ${card.title}`;
+      cardTitle.textContent = card.title;
+      cardMessage.textContent = card.message;
+      hint.textContent = `Card ${index + 1} selected — tap the card to reveal your message.`;
+
+      tarotCard.classList.remove("flipped");
+
+      // Small delay makes the reset feel intentional.
+      setTimeout(() => {
+        hint.textContent = `Card ${index + 1} • Tap the card to flip ✦`;
+      }, 500);
+
+      cardScene.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function flipCard() {
+      if (selectedNumber === null) {
+        hint.textContent = "Please choose a number first ♡";
+        return;
+      }
+
+      tarotCard.classList.toggle("flipped");
+
+      hint.textContent = tarotCard.classList.contains("flipped")
+        ? `Your message from Card ${selectedNumber + 1} ✦`
+        : `Card ${selectedNumber + 1} • Tap the card to flip ✦`;
+    }
+
+    cardScene.addEventListener("click", flipCard);
+
+    cardScene.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        flipCard();
+      }
+    });
+
+    flipAgain.addEventListener("click", flipCard);
+
+    // MENU
+    const menuButton = document.getElementById("menuButton");
+    const menuPanel = document.getElementById("menuPanel");
+    const loveOption = document.getElementById("loveOption");
+
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const open = menuPanel.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", open);
+    });
+
+    loveOption.addEventListener("click", () => {
+      menuPanel.classList.remove("open");
+      menuButton.setAttribute("aria-expanded", "false");
+      document.getElementById("loveTarot").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".menu-wrap")) {
+        menuPanel.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      }
+    });
+  </script>
+</body>
+</html>
